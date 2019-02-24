@@ -24,7 +24,7 @@ class InitializeCommand
             write_file("#{root}/app/contorllers/concerns/response.rb", resp_template)
 
             # Add Views
-            system("mkdir -p #{root}/app/views/documenation")
+            exec("mkdir -p #{root}/app/views/documentation")
             dihtml_template = get_file_str("#{this_dir}/../templates/documentation.index.erb.txt")
             write_file("#{root}/app/views/documenation/documentation.index.erb", dihtml_template)
 
@@ -32,6 +32,9 @@ class InitializeCommand
             write_file("#{root}/app/views/layouts/documentation.layout.erb", dlhtml_template)
             
             # Update Routes
+            routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
+            routes_file = get_file_str("#{root}/config/routes.rb")
+
         end
 
     end

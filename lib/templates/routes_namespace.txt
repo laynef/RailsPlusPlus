@@ -1,3 +1,5 @@
+  resources :documentation, only: :index
+  
   namespace :api do
     # Add API Routes here
 
