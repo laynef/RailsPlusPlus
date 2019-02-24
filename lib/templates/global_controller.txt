@@ -124,23 +124,6 @@ class GlobalController < ApplicationController
         end
 
         def index_response
-            { 
-                data: handle_pagination, 
-                current_page: page_urls[:page], 
-                first_page_url: page_urls[:first_page_url], 
-                from: nil, 
-                last_page: page_urls[:last_page], 
-                last_page_url: page_urls[:last_page_url], 
-                next_page_url: page_urls[:next_page_url], 
-                path: page_urls[:path], 
-                per_page: page_urls[:per_page], 
-                prev_page_url: page_urls[:prev_page_url], 
-                to: nil, 
-                total: page_urls[:total],
-            }
-        end
-
-        def page_urls
             page = (params[:page] || 1).to_i
             per_page = (params[:limit] || default_per_page).to_i
             total = handle_pagination_count
@@ -150,11 +133,17 @@ class GlobalController < ApplicationController
             nxt = (page + 1) > last ? nil : (page + 1)
             prev = (page - 1) == 0 ? nil : (page - 1)
             last = last == 0 ? 1 : last
+            data = handle_pagination
+            data_first = data.first
+            data_last = data.last
 
             {
+                data: data,
+                to: data_first ? data_first.id : nil,
+                from: data_last ? data_last.id : nil,
                 total: total,
                 path: path,
-                page: page,
+                current_page: page,
                 per_page: per_page,
                 last_page: last,
                 first_page_url: path_path + '1',
