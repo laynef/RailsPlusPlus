@@ -1,0 +1,7 @@
+module Response
+
+    def render_json data, status
+        render json: data, status: status
+    end
+
+end

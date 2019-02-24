@@ -1,0 +1,2 @@
+class {{ CONTROLLER_NAME }}Controller < GlobalController
+end

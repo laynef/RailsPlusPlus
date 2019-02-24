@@ -1,0 +1,129 @@
+<div class="header p-3 bg-dark card-shadow d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row">
+        <a href='/' class="h-100">
+            <img class="d-flex flex-column align-items-center justify-content-center" src="https://s3-us-west-1.amazonaws.com/manoftech/ruby.png" alt="" height='50' width='50' />
+        </a>
+        <h1 class="h1 h-100 align-items-center text-white ml-3">API Documentation</h1>
+    </div>
+    <a class="d-flex align-items-center cursor-pointer">
+        <h2 class="h5 text-white" onclick="goBack()">Go Back</h2>
+    </a>
+</div>
+
+<div class="card-body p-3 w-100 p-1">
+    <% @all_routes.each do |data| %>
+        <div class="card card-outline-secondary w-100 flex-respond-row card-shadow">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 p-1 card-shadow">
+                <div class='card-header <%= "#{data[:route_header]}" %>'>
+                    <span class="mr-1"><%= data[:method] %>:</span>
+                    <span><%= data[:route] %></span>
+                </div>
+                <div class="card-body p-2 w-100" style="max-height: 550px; overflow: auto;">
+                    <% if data[:middleware] && data[:middleware].length > 0 %>
+                        <h2 class="h5">Middleware Used:</h2>
+                        <ul>
+                            <% data[:middleware].each do |ware| %>
+                                <li class="h6"><%= "#{ware}" %></li>
+                            <% end %>
+                        </ul>
+                    <% end %>
+
+                    <h2 class="h5">Description:
+                        <ul>
+                          <% data[:description].each do |ware| %>
+                                <li class="h6"><%= "#{ware}" %></li>
+                            <% end %>
+                        </ul>
+                    </h2>
+
+                    <div class="d-flex f-row w-100">
+                        <h2 class="w-100 h6">Headers:</h2>
+                        <button class="<%= "#{data[:submit_button_color]} rounded-circle" %>" onclick="<%= "#{data[:submit_button_color]}NewHeader()" %>">+</button>
+                    </div>
+                    <div class="d-flex f-row w-100">
+                        <form id="<%= data[:camel_cased] %>HeadersForm" class="w-100">
+                                <div class="d-flex f-row">
+                                    <input type="text" class="w-100 m-1 d-flex f-row form-control" placeholder="Enter key">
+                                    <input  type="text" class="w-100 m-1 form-control" placeholder="Enter value">
+                                </div>
+                        </form>
+                    </div>
+
+                    <% if data[:allow_params] %>
+                        <div class="d-flex f-row w-100">
+                            <h2 class="w-100 h6">Params:</h2>
+                        </div>
+                        <div class="d-flex f-row w-100">
+                            <form id="<%= "#{data[:camel_cased]}ParamsForm" %>" class="w-100">
+                                <%= data[:params].each do |param| %>
+                                    <div class="d-flex f-row">
+                                        <input id="<%= "#{data[:camel_cased]}-#{param}" %>" type="text" class="w-100 m-1 d-flex f-row form-control" value="<%= "#{param}" %>">
+                                        <input id="<%= "#{data[:camel_cased]}-#{param}-value" %>" type="text" class="w-100 m-1 form-control" placeholder="Enter value">
+                                    </div>
+                                <% end %>
+                            </form>
+                        </div>
+                    <% else %>
+                        <span></span>
+                    <% end %>
+                    <% if data[:allow_body] %>
+                        <div class="d-flex f-row w-100">
+                            <h2 class="w-100 h6">Body:</h2>
+                            <button class="<%= "#{data[:submit_button_color]} rounded mr-2" %>" onclick="<%= "#{data[:camel_cased]}NewBodyFile()" %>">Add File</button>
+                            <button class="<%= "#{data[:submit_button_color]} rounded-circle" %>" onclick="<%= "#{data[:camel_cased]}NewBody()" %>">+</button>
+                        </div>
+                        <div class="d-flex f-row w-100">
+                            <form id='<%= "#{data[:camel_cased]}BodyForm" %>'class='w-100'>
+                                <div class='d-flex f-row'>
+                                    <input type='text' class='w-100 m-1 form-control' placeholder='Enter key'>
+                                    <input type='text' class='w-100 m-1 form-control' placeholder='Enter value'>
+                                </div>
+                            </form>
+                        </div>
+                    <% else %> 
+                        <span></span>
+                    <% end %>
+                    <div class="d-flex f-row w-100">
+                        <h2 class="w-100 h6">Querystrings: </h2>
+                        <button class="<%= "#{data[:submit_button_color]} rounded-circle" %>" onclick="<%= "#{data[:camel_cased]}NewQS()" %>">+</button>
+                    </div>
+                    <div class="d-flex f-row w-100">
+                        <form id='<%= "#{data[:camel_cased]}QSForm" %>' class="w-100">
+                            <div class="d-flex f-row">
+                                <input type="text" class="w-100 m-1 form-control" placeholder="Enter key">
+                                <input type="text" class="w-100 m-1 form-control" placeholder="Enter value">
+                            </div>
+                        </form>
+                    </div>
+                    <% if data[:allow_body] %>
+                        <h2 class="h6">Body Data Type:</h2>
+                        <select id="<%= "#{data[:camel_cased]}DataType" %>" class='form-control'>
+                            <option value=''></option>
+                            <option value='JSON'>JSON</option>
+                            <option value='Form Data'>Form Data</option>
+                        </select>
+                    <% else %>
+                        <span></span>
+                    <% end %>
+                    <div class="w-100 mt-2">
+                        <button class="<%= "#{data[:submit_button_color]} w-100" %>" onclick="<%= "#{data[:camel_cased]}()" %>">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 p-1 card-shadow p-1">
+                <div class="card-header">
+                    <h2 class="h5">Sample Data</h2>
+                </div>
+                <div class='card-body' style="max-height: 550px; overflow: auto;">
+                    <code style="overflow: auto; display: block;">
+                        <span id="<%= "#{data[:camel_cased]}-results" %>" style="white-space: pre;"></span>
+                    </code>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+
+<script>function goBack() { window.history.back(); }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>

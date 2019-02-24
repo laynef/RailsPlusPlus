@@ -1,0 +1,202 @@
+class APIDocumentationService
+  class << self
+    def generate_js_file
+        all_routes = get_api_routes
+        documentation_js_str = all_routes.map { |e| handle_js_for_route(e) }.join("\n")
+
+        File.open(output_path, "w+") { |f| f.write(documentation_js_str) }
+    end
+
+    def namespaces
+        # Blacklist namespaces
+        [:api]
+    end
+
+    def docs_namespaces
+        namespaces.each_with_object({}) do |item, acc| 
+          acc[item] = true
+          acc
+        end
+    end
+
+    def get_api_routes
+        get_all_routes.select do |e|
+          path_array = e[:route].split('/')
+          path_array.length > 1 && docs_namespaces[path_array[1].to_sym]
+        end
+    end
+
+    def camelize_route route
+        camel_route = route[:route].split('/').reject { |e| e == '' }.map { |e| /\:/.match(e) ? e.gsub!(':', '') + 'Param' : e }.map { |e| e.capitalize }.join('')
+        route[:method].downcase + camel_route
+    end
+
+    private
+    
+        def output_path
+            __dir__ + '/../../app/assets/javascripts/documentation.js'
+        end
+
+        def get_all_routes
+            Rails.application.routes.routes.map { |e| { route: e.path.spec.to_s.split('(')[0], method: e.verb } }.map { |e| e[:route] && e[:method] ? e.merge(camel_cased: camelize_route(e)) : e }.select { |e| e[:route] }
+        end
+
+        def handle_js_for_route route
+            camel_cased = route[:camel_cased]
+            javascript_string = ''
+            javascript_string += "window.#{camel_cased} = function() {
+                var allData = {
+                  method: '#{route[:method]}',
+                  route: '#{route[:route]}',
+                };
+                var paramList = document.getElementById('#{camel_cased}ParamsForm') && document.getElementById('#{camel_cased}ParamsForm').elements ? document.getElementById('#{camel_cased}ParamsForm').elements : [];
+                var headerList = document.getElementById('#{camel_cased}HeadersForm') && document.getElementById('#{camel_cased}HeadersForm').elements ? document.getElementById('#{camel_cased}HeadersForm').elements : [];
+                
+                var headerObject = {};
+                var tempHeaderKey = null;
+                for (var i = 0; i < headerList.length; i++) {
+                    var eleHeader = headerList[i].value;
+                    if (i % 2 !== 0 && tempHeaderKey) {
+                        headerObject[tempHeaderKey] = eleHeader;
+                        tempHeaderKey = null;
+                    } else {
+                        tempHeaderKey = eleHeader;
+                    }
+                }
+          
+                var hasHeaders = Object.keys(headerObject).length > 0;
+                var headers = { headers: headerObject };
+        
+                var paramObject = {};
+                var tempParamKey = null;
+                for (var i = 0; i < paramList.length; i++) {
+                  var eleParam = paramList[i].value;
+                  if (i % 2 !== 0) {
+                    paramObject[':' + tempParamKey] = eleParam;
+                    tempParamKey = null;
+                  } else {
+                    tempParamKey = eleParam;
+                  }
+                }
+                
+                var routeName = allData.route.split('/').map(e => paramObject[e] ? paramObject[e] : e).join('/');
+                
+                if (allData.method !== 'GET') {
+                var bodyDataType = document.getElementById('#{camel_cased}DataType') && document.getElementById('#{camel_cased}DataType').value ? document.getElementById('#{camel_cased}DataType').value : false;
+                var formBoolean = bodyDataType === 'Form Data';
+                
+                var bodyElements = [];
+                var bodyRawElements = document.getElementById('#{camel_cased}BodyForm') && document.getElementById('#{camel_cased}BodyForm').elements ? document.getElementById('#{camel_cased}BodyForm').elements : [];
+                for (var i = 0; i < bodyRawElements.length; i++) {
+                  var eleParam = bodyRawElements[i].files ? bodyRawElements[i].files[0] : (bodyRawElements[i].value || null);
+                  bodyElements.push(eleParam);
+                }
+                bodyElements = bodyElements.filter(e => !!e);
+                
+                var bodyObject = bodyDataType === 'Form Data' ? new FormData() : {};
+                var tempBodyKey = null;
+                bodyElements.forEach((e, i) => {
+                    if (i % 2 !== 0) {
+                      if (formBoolean) {
+                        bodyObject.append(tempBodyKey, e);
+                        tempBodyKey = null;
+                      } else {
+                        bodyObject[tempBodyKey] = e;
+                        tempBodyKey = null;
+                      }
+                    } else {
+                      if (formBoolean) {
+                        tempBodyKey = e;
+                      } else {
+                        bodyObject[e] = null;
+                        tempBodyKey = e;
+                      }
+                    }
+                  });
+                }
+                
+                var qsElements = [];
+                var qsRawElements = document.getElementById('#{camel_cased}QSForm') && document.getElementById('#{camel_cased}QSForm').elements ? document.getElementById('#{camel_cased}QSForm').elements : [];
+                for (var i = 0; i < qsRawElements.length; i++) {
+                  var eleParam = qsRawElements[i].value || null;
+                  qsElements.push(eleParam);
+                }
+                
+                qsElements = qsElements.filter(e => !!e);
+                
+                var qsObject = {};
+                var tempQSKey = null;
+                qsElements.forEach((e, i) => {
+                  if (i % 2 !== 0) {
+                    qsObject[tempQSKey] = e;
+                    tempQSKey = null;
+                  } else {
+                    qsObject[e] = null;
+                    tempQSKey = e;
+                  }
+                });
+                
+                var qsLength = Object.keys(qsObject).length;
+                var querystring = qsLength > 0 ? '?' : '';
+                var qsCount = 0;
+                if (querystring === '?') {
+                  for (var qs in qsObject) {
+                    if (qsLength - 1 === qsCount) {
+                      querystring += qs + '=' + qsObject[qs];
+                    } else {
+                      querystring += qs + '=' + qsObject[qs] + '&';
+                    }
+                  }
+                }
+                
+                var args = allData.method === 'GET' || allData.method === 'DELETE' ? [routeName + querystring, headers] : [routeName + querystring, bodyObject, headers];
+                if (!hasHeaders) args.pop();
+                var resultElement = document.getElementById('#{camel_cased}-results');
+                
+                axios[allData.method.toLowerCase()](...args)
+                  .then((resp) => {
+                    if (resp.status <= 300) {
+                      resultElement.innerText = JSON.stringify(resp.data, null, 4);
+                    } else {
+                      resultElement.innerText = JSON.stringify(resp.data, null, 4);
+                    }
+                  })
+                  .catch((err) => {
+                    var error_ajax = err && err.response && err.response.data ? err.response.data : err;
+                    resultElement.innerText = JSON.stringify(error_ajax, null, 4);
+                  });
+                };
+                "
+                
+                  javascript_string += "window.#{camel_cased}NewBody = function() {
+                  var ele = document.getElementById('#{camel_cased}BodyForm');
+                  ele.innerHTML += '<div class=\"d-flex f-row\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter key\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter value\"></div>';
+                };
+                
+                "
+                
+                  javascript_string += "window.#{camel_cased}NewBodyFile = function() {
+                  var ele = document.getElementById('#{camel_cased}BodyForm');
+                  ele.innerHTML += '<div class=\"d-flex f-row\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter key\"><input class=\"w-100 m-1 form-control\" type=\"file\" multiple accept=\"*/*\" placeholder=\"Enter value\"></div>';
+                };
+                
+                "
+                
+                  javascript_string += "window.#{camel_cased}NewQS = function() {
+                  var ele = document.getElementById('#{camel_cased}QSForm');
+                  ele.innerHTML += '<div class=\"d-flex f-row\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter key\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter value\"></div>';
+                };
+                "
+
+                javascript_string += "window.#{camel_cased}NewHeader = function() {
+                  var ele = document.getElementById('#{camel_cased}HeadersForm');
+                  ele.innerHTML += '<div class=\"d-flex f-row\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter key\"><input class=\"w-100 m-1 form-control\" type=\"text\" placeholder=\"Enter value\"></div>';
+                };
+
+                ";
+
+                javascript_string
+        end
+
+  end
+end
