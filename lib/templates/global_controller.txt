@@ -145,7 +145,7 @@ class GlobalController < ApplicationController
             per_page = (params[:limit] || default_per_page).to_i
             total = handle_pagination_count
             path = request.original_url
-            path_path = "#{path}?page="
+            path_path = add_pg_qs(path)
             last = (total / per_page.to_f).ceil
             nxt = (page + 1) > last ? nil : (page + 1)
             prev = (page - 1) == 0 ? nil : (page - 1)
@@ -162,6 +162,10 @@ class GlobalController < ApplicationController
                 next_page_url: nxt ? (path_path + nxt.to_s) : nil,
                 prev_page_url: prev ? (path_path + prev.to_s) : nil,
             }
+        end
+
+        def add_pg_qs str
+            /\?/.match(str) ? "#{str}&page=" : "#{str}?page="
         end
 
         def get_includes
