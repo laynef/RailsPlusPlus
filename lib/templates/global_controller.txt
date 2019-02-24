@@ -163,7 +163,7 @@ class GlobalController < ApplicationController
         end
 
         def get_includes
-            comma_separated params[:include]
+            comma_separated(params[:include]).map(&:to_sym)
         end
 
         def get_order
