@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require 'railspp'
+
+RailsPlusPlus.run_command(ARGV)

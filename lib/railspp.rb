@@ -10,6 +10,67 @@ require_relative './help/model.rb'
 class RailsPlusPlus
   class << self
 
+    def error_string
+      'ERROR: Must make railspp commands in the rails root directory'
+    end
+
+    def not_found_string
+      'ERROR: Your package cound not be found please reinstall'
+    end
+
+    def run_command arguments
+      is_help = arguments.select { |e| e == '--help' || e == '-h' }.length > 0
+      command_name = arguments[1]
+      passable_args = arguments.slice(2)
+      lookup = is_help ? command_name_help_lookup : command_name_lookup
+      command_exists = !lookup[command_name].nil?
+
+      if command_exists
+        command_class = lookup[command_name]
+        command_class.run(passable_args)
+      else
+        DocumentationHelpCommand.run(descriptions.join("\n"))
+      end
+    end
+
+    private
+
+    def command_name_lookup
+      {
+        i: InitializeCommand,
+        init: InitializeCommand,
+        initialize: InitializeCommand,
+        m: ModelCommand,
+        model: ModelCommand,
+        make_test: ModelTestCommand,
+        mt: MakeTestCommand,
+      }
+    end
+
+    def command_name_help_lookup
+      {
+        i: InitializeHelpCommand,
+        init: InitializeHelpCommand,
+        initialize: InitializeHelpCommand,
+        m: ModelHelpCommand,
+        model: ModelHelpCommand,
+        make_test: ModelTestHelpCommand,
+        mt: MakeTestHelpCommand,
+      }
+    end
+
+    def descriptions
+      [
+        '- i => Initialize your project',
+        '- init => Initialize your project',
+        '- initialize => Initialize your project',
+        '- m => Generate your CRUD model, controller, and migration',
+        '- model => Generate your CRUD model, controller, and migration',
+        '- make_test => Generate your resource unit test',
+        '- mt => Generate your resource unit test'
+      ]
+    end
+
   end
 end
 
