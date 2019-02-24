@@ -79,7 +79,7 @@ class APIDocumentationService
                   }
                 }
                 
-                var routeName = allData.route.split('/').map(e => paramObject[e] ? paramObject[e] : e).join('/');
+                var routeName = allData.route.split('/').map(function(e) { return paramObject[e] ? paramObject[e] : e; }).join('/');
                 
                 if (allData.method !== 'GET') {
                 var bodyDataType = document.getElementById('#{camel_cased}DataType') && document.getElementById('#{camel_cased}DataType').value ? document.getElementById('#{camel_cased}DataType').value : false;
@@ -91,11 +91,13 @@ class APIDocumentationService
                   var eleParam = bodyRawElements[i].files ? bodyRawElements[i].files[0] : (bodyRawElements[i].value || null);
                   bodyElements.push(eleParam);
                 }
-                bodyElements = bodyElements.filter(e => !!e);
+                bodyElements = bodyElements.filter(function(e) {
+                  return !!e;
+                });
                 
                 var bodyObject = bodyDataType === 'Form Data' ? new FormData() : {};
                 var tempBodyKey = null;
-                bodyElements.forEach((e, i) => {
+                bodyElements.forEach(function(e, i) {
                     if (i % 2 !== 0) {
                       if (formBoolean) {
                         bodyObject.append(tempBodyKey, e);
@@ -122,11 +124,11 @@ class APIDocumentationService
                   qsElements.push(eleParam);
                 }
                 
-                qsElements = qsElements.filter(e => !!e);
+                qsElements = qsElements.filter(function(e) { return !!e; });
                 
                 var qsObject = {};
                 var tempQSKey = null;
-                qsElements.forEach((e, i) => {
+                qsElements.forEach(function(e, i) {
                   if (i % 2 !== 0) {
                     qsObject[tempQSKey] = e;
                     tempQSKey = null;
@@ -138,30 +140,32 @@ class APIDocumentationService
                 
                 var qsLength = Object.keys(qsObject).length;
                 var querystring = qsLength > 0 ? '?' : '';
+
                 var qsCount = 0;
+                var qsArray = [];
                 if (querystring === '?') {
                   for (var qs in qsObject) {
-                    if (qsLength - 1 === qsCount) {
-                      querystring += qs + '=' + qsObject[qs];
-                    } else {
-                      querystring += qs + '=' + qsObject[qs] + '&';
+                    if (qs && qsObject[qs]) {
+                      qsArray.push(qs + '=' + qsObject[qs]);
                     }
                   }
                 }
+
+                querystring += qsArray.join('&');
                 
                 var args = allData.method === 'GET' || allData.method === 'DELETE' ? [routeName + querystring, headers] : [routeName + querystring, bodyObject, headers];
                 if (!hasHeaders) args.pop();
                 var resultElement = document.getElementById('#{camel_cased}-results');
                 
                 axios[allData.method.toLowerCase()](...args)
-                  .then((resp) => {
+                  .then(function(resp) {
                     if (resp.status <= 300) {
                       resultElement.innerText = JSON.stringify(resp.data, null, 4);
                     } else {
                       resultElement.innerText = JSON.stringify(resp.data, null, 4);
                     }
                   })
-                  .catch((err) => {
+                  .catch(function(err) {
                     var error_ajax = err && err.response && err.response.data ? err.response.data : err;
                     resultElement.innerText = JSON.stringify(error_ajax, null, 4);
                   });

@@ -158,7 +158,8 @@ class GlobalController < ApplicationController
             return "#{str}?page=" unless has_qs
             before_qs, after = str.split('?')
             after_qs = after.split('&').reject { |e| /page\=/.match(e) }
-            "#{before_qs}?#{after_qs.join('&')}&page="
+            after_qs.push('page=')
+            "#{before_qs}?#{after_qs.join('&')}"
         end
 
         def get_includes
