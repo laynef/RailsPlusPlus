@@ -165,7 +165,11 @@ class GlobalController < ApplicationController
         end
 
         def add_pg_qs str
-            /\?/.match(str) ? "#{str}&page=" : "#{str}?page="
+            has_qs = /\?/.match(str)
+            return "#{str}?page=" unless has_qs
+            before_qs, after = str.split('?')
+            after_qs = after.split('&').reject { |e| /page\=/.match(e) }
+            "#{before_qs}?#{after_qs.join('&')}&page="
         end
 
         def get_includes
