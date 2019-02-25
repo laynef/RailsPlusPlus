@@ -15,7 +15,9 @@ List of commands:
         end
 
         def ascii_art
-""
+"
+
+"
         end
 
     end
