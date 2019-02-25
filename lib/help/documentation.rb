@@ -2,7 +2,7 @@ class DocumentationHelpCommand
     class << self
 
         def run descriptions
-"#{ascii_art}
+            puts "#{ascii_art}
 Rails Plus Plus Version: 0.0.1
 
 Rails Plus Plus: Command Line Interface to make your life easier.

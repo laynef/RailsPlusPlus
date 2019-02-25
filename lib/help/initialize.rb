@@ -2,7 +2,7 @@ class InitializeHelpCommand
     class << self
 
         def run *args
-"No Options available. 
+            puts "No Options available. 
 
 Run to initialize your project:
 'railspp initialize'

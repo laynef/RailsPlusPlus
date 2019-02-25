@@ -2,7 +2,7 @@ class ModelHelpCommand
     class << self
 
         def run
-"No Options available. 
+            puts "No Options available. 
 
 Same command as:
 rails generate model <model-name> 
