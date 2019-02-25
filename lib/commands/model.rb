@@ -7,7 +7,12 @@ class ModelCommand < MoreUtils
         def run *args
             lookup = flag_lookup(args)
             arguments = get_args(args)
-            
+
+            if arguments.length > 2
+                puts "Enter a valid model generation command."
+                return 
+            end
+
             model_name = arguments[0].camelcase
             others = arguments[1..-1]
 
@@ -23,6 +28,8 @@ class ModelCommand < MoreUtils
             controller_regex = '{{ CONTROLLER_NAME }}'
             controller_str = controller_temp.gsub(controller_regex, controller_name)
             write_file("#{root}/app/controllers/#{api_version_path}/#{model_name.underscore}_controller.rb", controller_str)
+
+            puts "#{model_name} model, migration, and controller has been generated."
         end
 
     end

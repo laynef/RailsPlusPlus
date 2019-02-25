@@ -5,6 +5,8 @@ class InitializeCommand < MoreUtils
     class << self
 
         def run *args
+            lookup = flag_lookup(args)
+
             # Add Initializers
             cors_template = get_file_str("#{this_dir}/../templates/rack_cors_initializer.txt")
             write_file("#{root}/config/initializers/rack_cors.rb", cors_template)
@@ -40,13 +42,17 @@ class InitializeCommand < MoreUtils
             write_file("#{root}/app/views/layouts/documentation.html.erb", dlhtml_template)
             
             # Update Routes
-            routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
-            routes_file = get_file_str("#{root}/config/routes.rb")
-            routes_arr = routes_file.split("\n")
-            last_end_line = last_end_index(routes_arr)
+            unless lookup[:"skip-routes"]
+                routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
+                routes_file = get_file_str("#{root}/config/routes.rb")
+                routes_arr = routes_file.split("\n")
+                last_end_line = last_end_index(routes_arr)
 
-            new_routes = routes_arr.slice(0, last_end_line).join("\n") + "\n#{routes_template}\nend\n"
-            write_file("#{root}/config/routes.rb", new_routes)
+                new_routes = routes_arr.slice(0, last_end_line).join("\n") + "\n#{routes_template}\nend\n"
+                write_file("#{root}/config/routes.rb", new_routes)
+            end
+
+            puts "Your project has been initialized."
         end
 
         def last_end_index arr
