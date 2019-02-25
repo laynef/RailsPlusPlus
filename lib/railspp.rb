@@ -5,17 +5,18 @@ require_relative './help/documentation.rb'
 require_relative './help/initialize.rb'
 require_relative './help/make_test.rb'
 require_relative './help/model.rb'
+require_relative './utils/strings.rb'
 
 
-class RailsPlusPlus
+class RailsPlusPlus < MoreUtils
   class << self
 
     def error_string
       'ERROR: Must make railspp commands in the rails root directory'
     end
 
-    def not_found_string
-      'ERROR: Your package cound not be found please reinstall'
+    def check_directory
+      File.file?(root + '/bin/rails')
     end
 
     def run_command arguments
