@@ -50,11 +50,10 @@ class InitializeCommand < MoreUtils
         end
 
         def last_end_index arr
-            index = 0
-            arr.each_with_index do |e, i|
-                index = i if /(end)/.match(e)
+            arr.each_with_index.inject(0) do |acc, (e, i)|
+                acc = i if /(end)/.match(e)
+                acc
             end
-            index
         end
 
     end

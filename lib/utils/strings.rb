@@ -48,5 +48,14 @@ class MoreUtils
             arr.reject { |e| /--/.match(e) }
         end
 
+        def flag_lookup arr
+            arr.each_with_object({}) do |e, acc|
+                e = e.gsub('--', '')
+                key, val = e.split('=')
+                acc[key.to_sym] = val
+                acc
+            end
+        end
+
     end
 end
