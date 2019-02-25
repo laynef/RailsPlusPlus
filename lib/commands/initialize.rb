@@ -1,4 +1,7 @@
-class InitializeCommand
+require_relative '../utils/strings.rb'
+
+
+class InitializeCommand < MoreUtils
     class << self
 
         def run *args
@@ -34,25 +37,22 @@ class InitializeCommand
             # Update Routes
             routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
             routes_file = get_file_str("#{root}/config/routes.rb")
+            routes_arr = routes_file.split("\n")
+            last_end_line = last_end_index(routes_arr)
+            insert_index = last_end_line - 1
 
+            routes_arr.slice(insert_index).join("\n") + "\n#{routes_template}\nend\n"
+        end
+
+        def last_end_index arr
+            index = 0
+            arr.each_with_index do |e, i|
+                index = i if /end/.match(e)
+            end
+            index
         end
 
     end
 
-    def get_file_str path
-        File.open(path, 'r:UTF-8', &:read)
-    end
-
-    def write_file path, str
-        File.write(path, str)
-    end
-
-    def this_dir
-        __dir__
-    end
-
-    def root
-        Dir.pwd
-    end
 end
   

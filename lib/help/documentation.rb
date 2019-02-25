@@ -1,9 +1,11 @@
-class DocumentationHelpCommand
+require_relative '../utils/strings.rb'
+
+class DocumentationHelpCommand < MoreUtils
     class << self
 
         def run descriptions
             puts "#{ascii_art}
-Rails Plus Plus Version: 0.0.1
+Rails Plus Plus Version: #{gem_version}
 
 Rails Plus Plus: Command Line Interface to make your life easier.
 => The Rails Plus Plus command is 'railspp'. To blast this project into the fifth dimension.
