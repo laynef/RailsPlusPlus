@@ -28,7 +28,7 @@ Etc...
 Associations:
 
 You can grab the associated tables with include with comma separation.
-They will be formatted in the Global Controller. Provide a lowercase singluar model name.
+They will be formatted in the Global Controller. Provide a model assoication as defined.
 
 ```plain-text
 ?include=(1st-model-name),(2nd-model-name)
