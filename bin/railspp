@@ -2,4 +2,8 @@
 
 require 'railspp'
 
-RailsPlusPlus.run_command(ARGV)
+if RailsPlusPlus.check_directory
+    RailsPlusPlus.run_command(ARGV)
+else
+    puts RailsPlusPlus.error_string
+end

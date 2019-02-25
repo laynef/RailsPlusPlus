@@ -56,15 +56,17 @@ comma separated. The value can only be `DESC` or `ASC`.
 
 Returns the row by id of a model in a single object returned.
 
-## Store Method
+## Create Method
 
-This handles your create with any keys you allow with `$fillable` in your model.
+This handles your create with any keys you allow with your `create_params` method in your controller.
+By default it is every key in the model with id, created_at, or updated_at
 Returning a single object of the row created.
 
 ## Update Method
 
-This handles your create with any keys you allow with `$fillable` in your model.
-Returning a single object of the row updated.
+This handles your update with any keys you allow with your `update_params` method in your controller.
+By default it is every key in the model with id, created_at, or updated_at
+Returning a single object of the row created.
 
 ## Destroy Method
 
