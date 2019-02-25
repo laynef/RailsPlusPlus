@@ -19,15 +19,16 @@ class RailsPlusPlus
     end
 
     def run_command arguments
+
       is_help = arguments.select { |e| e == '--help' || e == '-h' }.length > 0
       command_name = arguments[0]
-      passable_args = arguments.slice(1)
+      passable_args = arguments[1..-1]
       lookup = is_help ? command_name_help_lookup : command_name_lookup
       command_exists = !command_name.nil? && !lookup[command_name.to_sym].nil?
 
       if command_exists
         command_class = lookup[command_name.to_sym]
-        command_class.run(passable_args)
+        command_class.run(*passable_args)
       else
         DocumentationHelpCommand.run(descriptions.join("\n"))
       end

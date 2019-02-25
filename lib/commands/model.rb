@@ -5,7 +5,29 @@ class ModelCommand < MoreUtils
     class << self
 
         def run *args
+            flag_lookup = get_flags(args).each_with_object({}) do |e, acc|
+                e = e.gsub('--', '')
+                key, val = e.split('=')
+                acc[key.to_sym] = val
+                acc
+            end
 
+            arguments = get_args(args)
+            model_name = arguments[0].camelcase
+            others = arguments[1..-1]
+
+            system("rails generate model #{model_name} #{others.join(' ')}")
+
+            api_version_path = flag_lookup[:"api-version"] || 'api/v1'
+            system("mkdir -p #{root}/app/controllers/#{api_version_path}")
+
+            controller_prefix = api_version_path.split('/').map { |e| e.downcase.capitalize }.join('::')
+            controller_name = controller_prefix + '::' + model_name
+
+            controller_temp =  get_file_str("#{this_dir}/../templates/controller.txt")
+            controller_regex = '{{ CONTROLLER_NAME }}'
+            controller_str = controller_temp.gsub(controller_regex, controller_name)
+            write_file("#{root}/app/controllers/#{api_version_path}/#{model_name.underscore}_controller.rb", controller_str)
         end
 
     end

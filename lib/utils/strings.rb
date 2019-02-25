@@ -1,5 +1,20 @@
 class String
 
+    def underscore
+        self.gsub(/::/, '/').
+        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+        gsub(/([a-z\d])([A-Z])/,'\1_\2').
+        tr("-", "_").
+        downcase
+    end
+
+    def camelcase
+        self.split(/(?=[A-Z])|(_)/)
+            .reject { |e| e == '_' }
+            .map(&:capitalize)
+            .join('')
+    end
+
 end
 
 class MoreUtils
@@ -23,6 +38,14 @@ class MoreUtils
     
         def root
             Dir.pwd
+        end
+
+        def get_flags arr
+            arr.select { |e| /--/.match(e) }
+        end
+
+        def get_args arr
+            arr.reject { |e| /--/.match(e) }
         end
 
     end
