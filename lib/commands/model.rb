@@ -8,7 +8,7 @@ class ModelCommand < MoreUtils
             lookup = flag_lookup(args)
             arguments = get_args(args)
 
-            if arguments.length > 2
+            if arguments.length < 2
                 puts "Enter a valid model generation command."
                 return 
             end
