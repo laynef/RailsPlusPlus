@@ -1,7 +1,5 @@
 class GlobalController < ApplicationController
 
-    before_action :set_headers
-
     include Response
     include ExceptionHandler
 
