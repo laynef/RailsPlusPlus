@@ -4,7 +4,7 @@ require 'faker'
 class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
 
   setup do
-    @data = {{ MODEL }}.create({{ PARAMS }})
+    @data = "{{ MODEL }}".singularize.constantize.create({{ PARAMS }})
   end
 
   test "should create {{ NAMESPACE_SNAKECASE }}" do
