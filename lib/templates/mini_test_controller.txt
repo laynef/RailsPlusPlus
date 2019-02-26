@@ -1,0 +1,39 @@
+require 'test_helper'
+require 'faker'
+
+class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
+
+  setup do
+    @data = {{ MODEL }}.create({{ PARAMS }})
+  end
+
+  test "should create {{ NAMESPACE_SNAKECASE }}" do
+    post '{{ ROUTE }}', params: {{ PARAMS }}
+    assert_response :created
+  end
+
+  test "should get index {{ NAMESPACE_SNAKECASE }}" do
+    get '{{ ROUTE }}'
+    assert_response :success
+  end
+
+  test "should show {{ NAMESPACE_SNAKECASE }}" do
+    get "{{ ROUTE }}/#{@data.id}"
+    assert_response :success
+  end
+
+  test "should put update {{ NAMESPACE_SNAKECASE }}" do
+    put "{{ ROUTE }}/#{@data.id}", params: {{ PARAMS }}
+    assert_response :success
+  end
+
+  test "should patch update {{ NAMESPACE_SNAKECASE }}" do
+    patch "{{ ROUTE }}/#{@data.id}", params: {{ PARAMS }}
+    assert_response :success
+  end
+
+  test "should destroy {{ NAMESPACE_SNAKECASE }}" do
+    delete "{{ ROUTE }}/#{@data.id}"
+    assert_response :no_content
+  end
+end
