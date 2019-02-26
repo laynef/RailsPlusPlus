@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
   s.licenses    = ['MIT']
   s.summary = %q{Scaffold your CRUD operations}
 
-  s.add_runtime_dependency 'rails', '~> 5'
-  s.add_runtime_dependency 'rack-cors', '~> 1'
-  s.add_runtime_dependency 'faker', '~> 1.9' 
+  s.add_dependency 'rails', '~> 5'
+  s.add_dependency 'rack-cors', '~> 1'
+  s.add_dependency 'faker', '~> 1.9' 
 
 end

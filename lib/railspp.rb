@@ -6,7 +6,11 @@ require_relative './help/initialize.rb'
 require_relative './help/make_test.rb'
 require_relative './help/model.rb'
 require_relative './utils/strings.rb'
+require 'rack-cors'
 
+module Rack
+  autoload :Cors, 'rack-cors'
+end
 
 class RailsPlusPlus < MoreUtils
   class << self
