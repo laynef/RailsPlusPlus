@@ -2,3 +2,4 @@ test/
 !test/bin
 !test/test_railspp.rb
 railspp-*
+.ruby-version

@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-
-require_relative '../../lib/railspp.rb'
-
-if RailsPlusPlus.check_directory
-    RailsPlusPlus.run_command(ARGV)
-else
-    puts RailsPlusPlus.error_string
-end
