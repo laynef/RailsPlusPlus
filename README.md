@@ -4,8 +4,8 @@ Autogenerate your CRUD operations with Swagger like API documentation
 
 ## Requirements
 
-Rails version >= 5
-Ruby version >= 2.5
+- Rails version >= 5
+- Ruby version >= 2.5
 
 ## Installation
 
