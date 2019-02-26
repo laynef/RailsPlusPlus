@@ -21,6 +21,10 @@ class ModelCommand < MoreUtils
             api_version_path = lookup[:"api-version"] || 'api/v1'
             system("mkdir -p #{root}/app/controllers/#{api_version_path}")
 
+            if lookup[:"with-mini-test"]
+                system("rails generate scaffold #{api_version_path}/#{model_name.downcase} #{others.join(' ')}")
+            end
+
             controller_prefix = api_version_path.split('/').map { |e| e.downcase.capitalize }.join('::')
             controller_name = controller_prefix + '::' + model_name
 
