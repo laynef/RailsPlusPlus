@@ -20,7 +20,6 @@ class RailsPlusPlus < MoreUtils
     end
 
     def run_command arguments
-
       is_help = arguments.select { |e| e == '--help' || e == '-h' }.length > 0
       command_name = arguments[0]
       passable_args = arguments[1..-1]
