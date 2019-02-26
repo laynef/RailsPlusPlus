@@ -13,11 +13,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{lib,bin}/**/**"] + ["README.md"]
   s.require_paths = ["lib"]
   s.required_ruby_version = ">= 2.5"
-  s.licenses    = ['MIT']
+  s.licenses = 'MIT'
   s.summary = %q{Scaffold your CRUD operations}
 
   s.add_dependency 'rails', '~> 5'
-  s.add_dependency 'rack-cors', '~> 1'
   s.add_dependency 'faker', '~> 1.9' 
 
 end

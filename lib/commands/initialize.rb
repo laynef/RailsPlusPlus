@@ -9,7 +9,7 @@ class InitializeCommand < MoreUtils
 
             # Add Initializers
             cors_template = get_file_str("#{this_dir}/../templates/rack_cors_initializer.txt")
-            write_file("#{root}/config/initializers/rack_cors.rb", cors_template)
+            write_file("#{root}/config/initializers/cors.rb", cors_template)
 
             adi_template = get_file_str("#{this_dir}/../templates/api_documentation_initializer.txt")
             write_file("#{root}/config/initializers/api_documentation_js.rb", adi_template)
@@ -40,7 +40,7 @@ class InitializeCommand < MoreUtils
 
             dlhtml_template = get_file_str("#{this_dir}/../templates/documentation.layout.erb.txt")
             write_file("#{root}/app/views/layouts/documentation.html.erb", dlhtml_template)
-            
+
             # Update Routes
             unless lookup[:"skip-routes"]
                 routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
