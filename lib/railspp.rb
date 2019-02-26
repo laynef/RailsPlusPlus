@@ -6,6 +6,8 @@ require_relative './help/initialize.rb'
 require_relative './help/make_test.rb'
 require_relative './help/model.rb'
 require_relative './utils/strings.rb'
+require 'rack-cors'
+require 'faker'
 
 
 class RailsPlusPlus < MoreUtils

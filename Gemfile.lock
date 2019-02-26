@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    railspp (0.0.1)
+    railspp (0.0.5)
       faker (~> 1.9)
-      rack-cors
+      rack-cors (>= 1)
       rails (~> 5)
 
 GEM
@@ -125,9 +125,9 @@ PLATFORMS
 
 DEPENDENCIES
   faker (~> 1.9)
-  rack-cors
+  rack-cors (>= 1)
   rails (~> 5)
   railspp!
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
