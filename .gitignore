@@ -1,5 +1,5 @@
 test/
-!test/bin
+!test/bin/*
 !test/test_railspp.rb
 railspp-*
 .ruby-version
