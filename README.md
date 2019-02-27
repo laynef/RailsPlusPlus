@@ -144,22 +144,18 @@ Test cover:
 Index:
 
 - status_code = 200
-- json_format = { data: (array), count: (integer) }
 
 Show:
 
 - status_code = 200
-- json_format = { id: (integer) }
 
 Create:
 
 - status_code = 201
-- json_format = { id: (integer) }
 
 Update:
 
 - status_code = 200
-- json_format = { id: (integer) }
 
 Destroy:
 

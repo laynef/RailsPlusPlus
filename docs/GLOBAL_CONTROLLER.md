@@ -6,6 +6,9 @@ The Global Controller uses inheritance to test defaults
 for all the functionality need to complete your resources.
 Restrict routes through your resource decalration.
 
+You can over write any of the methods in the global controller within your 
+parent controller that inherits the GlobalController.
+
 This supports all schemas and only handles resources for a single model.
 
 ## Default Resources
