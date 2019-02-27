@@ -4,7 +4,7 @@ require_relative '../utils/strings.rb'
 class MakeTestHelpCommand < MoreUtils
     class << self
 
-        def run
+        def run *args
             puts "No Options available
 
 With your generated your mini test
