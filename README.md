@@ -25,7 +25,7 @@ gem isntall railspp
 
 Your command CLI command bin path is `railspp`
 
-<!-- ![CLI DOCUMENTATION](./docs/command_list.png) -->
+![CLI DOCUMENTATION](./docs/CLI_COMMANDS.png)
 
 ## Getting Started
 
