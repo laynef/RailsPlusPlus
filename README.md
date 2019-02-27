@@ -1,6 +1,7 @@
 # Rails++
 
-Autogenerate your CRUD operations with Swagger like API documentation
+Autogenerate your CRUD operations with Swagger like API documentation without extra configuration 
+and generate mini test unit tests.
 
 ## Requirements
 
