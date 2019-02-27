@@ -16,10 +16,6 @@ Example:
 
 --api-version=api/v2
 
-For unit tests with Mini Test an the option:
-
---with-mini-test
-
 Same command as:
 rails generate model <model-name> 
 

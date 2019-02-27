@@ -3,12 +3,57 @@ require 'faker'
 
 class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
 
+  def model 
+    "{{ MODEL }}".singularize.camelize.constantize
+  end
+
+  def get_columns
+    model.columns_hash.map { |k, v| { key: k.to_sym, data_type: v.type }  }
+  end
+
+  def data_types val
+      lookup = {
+          string: Faker::Lorem.sentence.to_s,
+          datetime: DateTime.now,
+          integer: 1,
+          boolean: false,
+          text: Faker::Lorem.paragraph.to_s,
+      }
+      lookup[val] || nil
+  end
+
+  def black_list_keys
+      {
+          id: true,
+          created_at: true,
+          updated_at: true,
+      }
+  end
+
+  def set_data_values
+    get_columns.each_with_object({}) do |e, acc|
+        key = e[:key]
+        val = e[:data_type]
+        if special_key_values[key]
+            acc[key] = special_key_values[val]
+        elsif black_list_keys[key]
+        else
+            acc[key] = data_types(val)
+        end
+        acc
+    end
+  end
+
+  def random_params
+    set_data_values
+  end
+
   setup do
-    @data = "{{ MODEL }}".singularize.constantize.create({{ PARAMS }})
+    @data = model.create(random_params)
   end
 
   test "should create {{ NAMESPACE_SNAKECASE }}" do
-    post '{{ ROUTE }}', params: {{ PARAMS }}
+    post '{{ ROUTE }}', params: random_params
     assert_response :created
   end
 
@@ -23,12 +68,12 @@ class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should put update {{ NAMESPACE_SNAKECASE }}" do
-    put "{{ ROUTE }}/#{@data.id}", params: {{ PARAMS }}
+    put "{{ ROUTE }}/#{@data.id}", params: random_params
     assert_response :success
   end
 
   test "should patch update {{ NAMESPACE_SNAKECASE }}" do
-    patch "{{ ROUTE }}/#{@data.id}", params: {{ PARAMS }}
+    patch "{{ ROUTE }}/#{@data.id}", params: random_params
     assert_response :success
   end
 
