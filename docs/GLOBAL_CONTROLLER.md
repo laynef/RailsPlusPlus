@@ -20,6 +20,8 @@ All resource methods are made by default.
 Index get default will return a limit of 25 and offset of 0 and page of 1.
 Index uses offset to create pages.
 
+Querystings Options:
+
 - Pagination
 
 ```plain-text
