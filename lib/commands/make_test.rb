@@ -21,6 +21,7 @@ class MakeTestCommand < MoreUtils
             namespace = namespace_array.map { |e| e.downcase.capitalize }.join('::')
             namespace_snake = (namespace_array.join('_') + '_' + model).underscore
 
+            system("mkdir -p #{root}/test/controllers/#{namespace_array.join('/')}")
             test_template = get_file_str("#{this_dir}/../templates/mini_test_controller.txt")
             test_template = test_template.gsub(namespace_regex, namespace)
             test_template = test_template.gsub(model_regex, model)

@@ -140,8 +140,8 @@ class GlobalController < ApplicationController
 
             {
                 data: data,
-                to: data_first ? data_first.id : nil,
-                from: data_last ? data_last.id : nil,
+                from: data_first ? data_first.id : nil,
+                to: data_last ? data_last.id : nil,
                 total: total,
                 path: path,
                 current_page: page,
