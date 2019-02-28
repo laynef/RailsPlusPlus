@@ -20,6 +20,7 @@ class GlobalController < ApplicationController
 
     def show
         data = model.find(params[:id] || 0)
+        data = data.includes(*get_includes) if params[:include]
         render_json(data, 200)
     end
 
