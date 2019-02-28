@@ -20,7 +20,7 @@ All resource methods are made by default.
 Index get default will return a limit of 25 and offset of 0 and page of 1.
 Index uses offset to create pages.
 
-Pagination:
+- Pagination
 
 ```plain-text
 First page = ?page=1&limit=25&offset=0
@@ -28,7 +28,7 @@ Second page = ?page=2&limit=25&offset=0
 Etc...
 ```
 
-Associations:
+- Associations
 
 You can grab the associated tables with include with comma separation.
 They will be formatted in the Global Controller. Provide a model assoication as defined.
@@ -37,7 +37,7 @@ They will be formatted in the Global Controller. Provide a model assoication as 
 ?include=(1st-model-name),(2nd-model-name)
 ```
 
-Custom Wheres:
+- Custom Wheres
 
 You grab a custom where with key:value pairs set based on JSON formatting.
 Options are separated by commas and key:values are separated by semi-colons.
@@ -46,7 +46,7 @@ Options are separated by commas and key:values are separated by semi-colons.
 ?where=(key:value),(key:value)
 ```
 
-Order:
+- Order
 
 You grab by the order of any key in the model with key:value pairs that are
 comma separated. The value can only be `DESC` or `ASC`.
@@ -56,6 +56,17 @@ comma separated. The value can only be `DESC` or `ASC`.
 ```
 
 ## Show Method
+
+Querystring Options:
+
+- Associations
+
+You can grab the associated tables with include with comma separation.
+They will be formatted in the Global Controller. Provide a model assoication as defined.
+
+```plain-text
+?include=(1st-model-name),(2nd-model-name)
+```
 
 Returns the row by id of a model in a single object returned.
 
