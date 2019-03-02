@@ -13,12 +13,11 @@ class MakeTestCommand < MoreUtils
             routes_regex = '{{ ROUTE }}'
             namespace_snakecase_regex = '{{ NAMESPACE_SNAKECASE }}'
 
-            # api_route = arguments[0]
-            api_route = '/api/v1/user'
+            api_route = arguments[0]
             namespace_array = api_route.split('/')
             model = namespace_array.pop
             namespace_array = namespace_array.reject { |e| e == '' }
-            namespace = namespace_array.map { |e| e.downcase.capitalize }.join('::')
+            namespace = namespace_array.map { |e| e.downcase.capitalize }.join('::') + '::' + model.capitalize
             namespace_snake = (namespace_array.join('_') + '_' + model).underscore
 
             system("mkdir -p #{root}/test/controllers/#{namespace_array.join('/')}")
