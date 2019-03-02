@@ -17,7 +17,7 @@ class MakeTestCommand < MoreUtils
             namespace_array = api_route.split('/')
             model = namespace_array.pop
             namespace_array = namespace_array.reject { |e| e == '' }
-            namespace = namespace_array.map { |e| e.downcase.capitalize }.join('::') + '::' + model.capitalize
+            namespace = namespace_array.map { |e| e.downcase.capitalize }.join('::') + '::' + model.camelcase
             namespace_snake = (namespace_array.join('_') + '_' + model).underscore
 
             system("mkdir -p #{root}/test/controllers/#{namespace_array.join('/')}")
