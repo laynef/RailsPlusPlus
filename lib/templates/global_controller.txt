@@ -30,7 +30,7 @@ class GlobalController < ApplicationController
     end
 
     def update
-        data = model.where(params[:id] || 0).update(update_params).first
+        data = model.where(id: params[:id] || 0).update(update_params).first
         render_json(data, 200)
     end
 
