@@ -19,6 +19,11 @@ Example:
 Same command as:
 rails generate model <model-name> 
 
+If you use mini test with Rails by default, you can generate the test and your routes with
+the option:
+
+    --with-test
+
 With your generated controller
 
 Run to generate your model, migration, and controller:

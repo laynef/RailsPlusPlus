@@ -42,7 +42,7 @@ class InitializeCommand < MoreUtils
             write_file("#{root}/app/views/layouts/documentation.html.erb", dlhtml_template)
 
             # Update Routes
-            unless lookup[:"skip-routes"]
+            unless lookup.has_key?(:"skip-routes")
                 routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
                 routes_file = get_file_str("#{root}/config/routes.rb")
                 routes_arr = routes_file.split("\n")
