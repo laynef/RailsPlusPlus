@@ -16,7 +16,7 @@ class ModelCommand < MoreUtils
             model_name = arguments[0].camelcase
             others = arguments[1..-1]
 
-            system("rails generate model #{model_name} #{others.join(' ')}")
+            system("rails generate model #{model_name} #{others.join(' ')} --no-fixture")
 
             api_version_path = lookup[:"api-version"] || 'api/v1'
 
