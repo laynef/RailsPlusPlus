@@ -34,9 +34,7 @@ class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
     get_columns.each_with_object({}) do |e, acc|
         key = e[:key]
         val = e[:data_type]
-        if special_key_values[key]
-            acc[key] = special_key_values[val]
-        elsif black_list_keys[key]
+        if black_list_keys[key]
         else
             acc[key] = data_types(val)
         end
