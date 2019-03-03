@@ -39,7 +39,7 @@ class ModelCommand < MoreUtils
                 add_space = get_space_str(starting_space + space_count(starting_space))
                 new_routes = routes_file_arr.slice(0, route_line_index).join("\n") + "\n#{add_space}resources :#{model_name.underscore}\n" + routes_file_arr.slice(route_line_index, routes_file_arr.length).join("\n")
                 write_file("#{root}/config/routes.rb", new_routes)
-                system("ruby #{this_dir}/../railspp.rb mt /#{api_version_path}/#{model_name.underscore}")
+                system("railspp mt /#{api_version_path}/#{model_name.underscore}")
             end
 
             puts "#{model_name} model, migration, and controller has been generated."
