@@ -17,7 +17,7 @@ class GlobalController < ApplicationController
       error = { error: 'Past the amount of pages available' }
       status = past_pages ? 400 : 200
       data = past_pages ? error : index_response
-      data = handle_includes(data) if params[:include]
+      data = handle_includes(data) if params[:include] && status == 200
       render_json(data, status)
   end
 
