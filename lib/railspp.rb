@@ -1,10 +1,12 @@
 require_relative './commands/initialize.rb'
 require_relative './commands/model.rb'
 require_relative './commands/make_test.rb'
+require_relative './commands/update_version.rb'
 require_relative './help/documentation.rb'
 require_relative './help/initialize.rb'
 require_relative './help/model.rb'
 require_relative './help/make_test.rb'
+require_relative './help/update_version.rb'
 require_relative './utils/strings.rb'
 
 
@@ -45,6 +47,8 @@ class RailsPlusPlus < MoreUtils
         model: ModelCommand,
         mt: MakeTestCommand,
         make_test: MakeTestCommand,
+        uv: UpdateVersionCommand,
+        update_version: UpdateVersionCommand,
       }
     end
 
@@ -57,6 +61,8 @@ class RailsPlusPlus < MoreUtils
         model: ModelHelpCommand,
         mt: MakeTestHelpCommand,
         make_test: MakeTestHelpCommand,
+        uv: UpdateVersionHelpCommand,
+        update_version: UpdateVersionHelpCommand,
       }
     end
 
@@ -69,6 +75,8 @@ class RailsPlusPlus < MoreUtils
         '- model => Generate your CRUD model, controller, and migration',
         '- mt => Generate a unit test in minitest',
         '- make_test => Generate a unit test in minitest',
+        '- uv => Update your version of Rails Plus Plus in your code base',
+        '- update_version => Update your version of Rails Plus Plus in your code base',
       ]
     end
 
