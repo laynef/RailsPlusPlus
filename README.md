@@ -19,7 +19,13 @@ gem 'railspp'
 In your terminal
 
 ```bash
-gem isntall railspp
+gem install railspp
+```
+
+## Updating versions
+
+```bash
+railspp update_version
 ```
 
 ## CLI Commands
