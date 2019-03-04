@@ -1,5 +1,8 @@
 class GlobalController < ApplicationController
 
+  include ExceptionHandler
+  include Response
+
   def default_per_page
       25
   end
