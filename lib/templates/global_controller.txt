@@ -1,191 +1,196 @@
 class GlobalController < ApplicationController
 
-    include Response
-    include ExceptionHandler
+  def default_per_page
+      25
+  end
 
-    def default_per_page
-        25
-    end
+  def model
+      self.class.to_s.split('::').select { |e| /Controller/.match(e) }.first.chomp('Controller').singularize.constantize
+  end
 
-    def model
-        self.class.to_s.split('::').select { |e| /Controller/.match(e) }.first.chomp('Controller').singularize.constantize
-    end
+  def index
+      resp = index_response
+      past_pages = resp[:last_page] < resp[:current_page]
+      error = { error: 'Past the amount of pages available' }
+      status = past_pages ? 400 : 200
+      data = past_pages ? error : index_response
+      data = handle_includes(data) if params[:include]
+      render_json(data, status)
+  end
 
-    def index
-        resp = index_response
-        past_pages = resp[:last_page] < resp[:current_page]
-        error = { error: 'Past the amount of pages available' }
-        render_json(past_pages ? error : index_response, past_pages ? 400 : 200)
-    end
+  def show
+      data = model.find(params[:id] || 0)
+      data = data.includes(*get_includes) if params[:include]
+      data = handle_includes(data) if params[:include]
+      render_json(data, 200)
+  end
 
-    def show
-        data = model.find(params[:id] || 0)
-        data = data.includes(*get_includes) if params[:include]
-        render_json(data, 200)
-    end
+  def create
+      data = model.create(create_params)
+      render_json(data, 201)
+  end
 
-    def create
-        data = model.create(create_params)
-        render_json(data, 201)
-    end
+  def update
+      data = model.where(id: params[:id] || 0).update(update_params).first
+      render_json(data, 200)
+  end
 
-    def update
-        data = model.where(id: params[:id] || 0).update(update_params).first
-        render_json(data, 200)
-    end
+  def destroy
+      model.destroy(params[:id] || 0)
+      render_json(nil, 204)
+  end
 
-    def destroy
-        model.destroy(params[:id] || 0)
-        render_json(nil, 204)
-    end
+  def bulk_csv_create
+      data = model.create(csv_to_json)
+      render_json(data, 201)
+  end
 
-    def bulk_csv_create
-        data = model.create(csv_to_json)
-        render_json(data, 201)
-    end
+  def bulk_create
+      data = model.create(bulk_create_params)
+      render_json(data, 201)
+  end
 
-    def bulk_create
-        data = model.create(bulk_create_params)
-        render_json(data, 201)
-    end
+  def bulk_update
+      data = model.where(id: bulk_update_params[:id]).update(bulk_update_params)
+      render_json(data, 201)
+  end
 
-    def bulk_update
-        data = model.where(id: bulk_update_params[:id]).update(bulk_update_params)
-        render_json(data, 201)
-    end
+  def bulk_destory
+      model.where(id: bulk_destroy_params)
+      render_json(nil, 204)
+  end
 
-    def bulk_destory
-        model.where(id: bulk_destroy_params)
-        render_json(nil, 204)
-    end
+  private
 
-    private
+      def csv_to_json param_key = :file, separated_by = ','
+          lines = params[param_key].split("\n")
+          keys = lines[0].split(separated_by)
+          rows = lines.slice(1).map { |e| e.split(separated_by) }
+          rows.map { |e| e.each_with_index.inject({}) { |acc, (e, i)| acc.merge("#{keys[i]}": e) } }
+      end
 
-        def csv_to_json param_key = :file, separated_by = ','
-            lines = params[param_key].split("\n")
-            keys = lines[0].split(separated_by)
-            rows = lines.slice(1).map { |e| e.split(separated_by) }
-            rows.map { |e| e.each_with_index.inject({}) { |acc, (e, i)| acc.merge("#{keys[i]}": e) } }
-        end
+      def create_params
+          bl = array_to_hash(black_list_create)
+          params.permit(*get_model_key.reject { |e| bl[e.to_sym] })
+      end
 
-        def create_params
-            bl = array_to_hash(black_list_create)
-            params.permit(*get_model_key.reject { |e| bl[e.to_sym] })
-        end
+      def update_params
+          bl = array_to_hash(black_list_update)
+          params.permit(*get_model_key.reject { |e| bl[e.to_sym] })
+      end
 
-        def update_params
-            bl = array_to_hash(black_list_update)
-            params.permit(*get_model_key.reject { |e| bl[e.to_sym] })
-        end
+      def bulk_create_params
+          params.permit(bulk: get_model_key)
+      end
 
-        def bulk_create_params
-            params.permit(bulk: get_model_key)
-        end
+      def bulk_update_params
+          params.permit(bulk: get_model_key)
+      end
 
-        def bulk_update_params
-            params.permit(bulk: get_model_key)
-        end
+      def bulk_destroy_params
+          params.permit(bulk: [:id])
+      end
 
-        def bulk_destroy_params
-            params.permit(bulk: [:id])
-        end
+      def black_list_create
+          [:id, :created_at, :updated_at]
+      end
 
-        def black_list_create
-            [:id, :created_at, :updated_at]
-        end
+      def black_list_update
+          [:id, :created_at, :updated_at]
+      end
 
-        def black_list_update
-            [:id, :created_at, :updated_at]
-        end
+      def array_to_hash array
+          array.each_with_object({}) do |e, acc|
+              acc[e] = true
+              acc
+          end
+      end
 
-        def array_to_hash array
-            array.each_with_object({}) do |e, acc|
-                acc[e] = true
-                acc
-            end
-        end
+      def handle_pagination
+          limit = (params[:limit] || default_per_page).to_i
+          offset = (params[:offset] || 0).to_i
+          page = (params[:page] || 1).to_i
 
-        def handle_pagination
-            limit = (params[:limit] || default_per_page).to_i
-            offset = (params[:offset] || 0).to_i
-            page = (params[:page] || 1).to_i
+          data = model.limit(limit).offset(offset).offset((page - 1) * limit)
+          data = data.where(get_where) if params[:where]
+          data = data.includes(*get_includes) if params[:include]
+          data = data.order(get_order) if params[:order]
+          data = data.all
+          data
+      end
 
-            data = model.limit(limit).offset(offset).offset((page - 1) * limit)
-            data = data.where(get_where) if params[:where]
-            data = data.includes(*get_includes) if params[:include]
-            data = data.order(get_order) if params[:order]
-            data = data.all
-            data
-        end
+      def handle_pagination_count
+          data = model
+          data = data.where(get_where) if params[:where]
+          data.count
+      end
 
-        def handle_pagination_count
-            data = model
-            data = data.where(get_where) if params[:where]
-            data.count
-        end
+      def handle_includes data
+          data.to_json({ include: get_includes })
+      end
 
-        def index_response
-            page = (params[:page] || 1).to_i
-            per_page = (params[:limit] || default_per_page).to_i
-            total = handle_pagination_count
-            path = request.original_url
-            path_path = add_pg_qs(path)
-            last = (total / per_page.to_f).ceil
-            nxt = (page + 1) > last ? nil : (page + 1)
-            prev = (page - 1) == 0 ? nil : (page - 1)
-            last = last == 0 ? 1 : last
-            data = handle_pagination
-            data_first = data.first
-            data_last = data.last
+      def index_response
+          page = (params[:page] || 1).to_i
+          per_page = (params[:limit] || default_per_page).to_i
+          total = handle_pagination_count
+          path = request.original_url
+          path_path = add_pg_qs(path)
+          last = (total / per_page.to_f).ceil
+          nxt = (page + 1) > last ? nil : (page + 1)
+          prev = (page - 1) == 0 ? nil : (page - 1)
+          last = last == 0 ? 1 : last
+          data = handle_pagination
+          data_first = data.first
+          data_last = data.last
 
-            {
-                data: data,
-                from: data_first ? data_first.id : nil,
-                to: data_last ? data_last.id : nil,
-                total: total,
-                path: path,
-                current_page: page,
-                per_page: per_page,
-                last_page: last,
-                first_page_url: path_path + '1',
-                last_page_url: path_path + last.to_s,
-                next_page_url: nxt ? (path_path + nxt.to_s) : nil,
-                prev_page_url: prev ? (path_path + prev.to_s) : nil,
-            }
-        end
+          {
+              data: data,
+              from: data_first ? data_first.id : nil,
+              to: data_last ? data_last.id : nil,
+              total: total,
+              path: path,
+              current_page: page,
+              per_page: per_page,
+              last_page: last,
+              first_page_url: path_path + '1',
+              last_page_url: path_path + last.to_s,
+              next_page_url: nxt ? (path_path + nxt.to_s) : nil,
+              prev_page_url: prev ? (path_path + prev.to_s) : nil,
+          }
+      end
 
-        def add_pg_qs str
-            has_qs = /\?/.match(str)
-            return "#{str}?page=" unless has_qs
-            before_qs, after = str.split('?')
-            after_qs = after.split('&').reject { |e| /page\=/.match(e) }
-            after_qs.push('page=')
-            "#{before_qs}?#{after_qs.join('&')}"
-        end
+      def add_pg_qs str
+          has_qs = /\?/.match(str)
+          return "#{str}?page=" unless has_qs
+          before_qs, after = str.split('?')
+          after_qs = after.split('&').reject { |e| /page\=/.match(e) }
+          after_qs.push('page=')
+          "#{before_qs}?#{after_qs.join('&')}"
+      end
 
-        def get_includes
-            comma_separated(params[:include]).map(&:to_sym)
-        end
+      def get_includes
+          comma_separated(:include).map(&:to_sym)
+      end
 
-        def get_order
-            params[:order].split(',').flat_map { |e| e.split(':') }.join(' ')
-        end
+      def get_order
+          params[:order].split(',').flat_map { |e| e.split(':') }.join(' ')
+      end
 
-        def get_where
-            arrays = params[:where].split(',').map { |e| e.split(':') }
-            arrays.inject({}) do |acc, item|
-                key, val = item
-                acc[key] = val
-                acc
-            end
-        end
+      def get_where
+          arrays = params[:where].split(',').map { |e| e.split(':') }
+          arrays.inject({}) do |acc, item|
+              key, val = item
+              acc[key] = val
+              acc
+          end
+      end
 
-        def comma_separated key
-            params[:key].split(',')
-        end
+      def comma_separated key
+          params[key].split(',')
+      end
 
-        def get_model_key
-            model.columns.map { |e| e.name.to_sym }
-        end
+      def get_model_key
+          model.columns.map { |e| e.name.to_sym }
+      end
 
 end
