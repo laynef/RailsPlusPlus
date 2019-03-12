@@ -10,6 +10,9 @@ class UpdateVersionCommand < MoreUtils
             gc_template = get_file_str("#{this_dir}/../templates/global_controller.txt")
             write_file("#{root}/app/controllers/global_controller.rb", gc_template)
 
+            gc_template = get_file_str("#{this_dir}/../templates/response.txt")
+            write_file("#{root}/app/controllers/concerns/response.rb", gc_template)
+
             # dc_template = get_file_str("#{this_dir}/../templates/documentation_controller.txt")
             # write_file("#{root}/app/controllers/documentation_controller.rb", dc_template)
 
