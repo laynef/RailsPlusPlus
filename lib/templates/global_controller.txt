@@ -14,7 +14,7 @@ class GlobalController < ApplicationController
     resp = index_response
     past_pages = resp[:last_page] < resp[:current_page]
     error = {error: "Past the amount of pages available"}
-    status = past_pages ? 400 : 200
+    status = past_pages ? :bad_request : :ok
     data = past_pages ? error : resp
     data = handle_includes(data) if params[:include] && !past_pages
     render_json(data, status)
@@ -23,45 +23,64 @@ class GlobalController < ApplicationController
   def show
     data = model.find(params[:id] || 0)
     data = handle_includes(data) if params[:include]
-    render_json(data, 200)
+    render_json(data, :ok)
   end
 
   def create
     data = model.create(create_params)
-    render_json(data, 201)
+    render_json(data, :created)
   end
 
   def update
     data = model.where(id: params[:id] || 0).update(update_params).first
-    render_json(data, 200)
+    render_json(data, :ok)
   end
 
   def destroy
     model.destroy(params[:id] || 0)
-    render_json(nil, 204)
+    render_json(nil, :no_content)
   end
 
   def bulk_csv_create
     data = model.create(csv_to_json)
-    render_json(data, 201)
+    render_json(data, :created)
   end
 
   def bulk_create
     data = model.create(bulk_create_params[:bulk])
-    render_json(data, 201)
+    render_json(data, :created)
   end
 
   def bulk_update
     data = model.where(id: bulk_update_params[:bulk].map {|e| e[:id] }).update(bulk_update_params[:bulk])
-    render_json(data, 201)
+    render_json(data, :ok)
   end
 
-  def bulk_destory
-    model.where(id: bulk_destroy_params[:bulk])
-    render_json(nil, 204)
+  def bulk_destroy
+    ids = comma_separated(:ids)
+    are_ids = array_of_integers(ids)
+    if ids.is_a?(Array) && are_ids
+      array = model.where(id: ids)
+      if array.length == ids.length
+        array.delete_all
+        render_json(nil, :no_content)
+      else
+        render_json({ error: "Not all ids are valid" }, :bad_request)
+      end
+    else
+      render_json({ error: "Must pass in a string of ids that are comma separated" }, :bad_request)
+    end
   end
 
   private
+
+  def array_of_integers array
+    array.all? { |e| is_i?(e) }
+  end
+
+  def is_i? string
+    !!(string =~ /\A[-+]?[0-9]+\z/)
+  end
 
   def csv_to_json param_key=:file, separated_by=","
     lines = params[param_key].split("\n")
