@@ -1,7 +1,9 @@
 require_relative './commands/initialize.rb'
+require_relative './commands/api_docs.rb'
 require_relative './commands/model.rb'
 require_relative './commands/make_test.rb'
 require_relative './commands/update_version.rb'
+require_relative './help/api_docs.rb'
 require_relative './help/documentation.rb'
 require_relative './help/initialize.rb'
 require_relative './help/model.rb'
@@ -49,6 +51,8 @@ class RailsPlusPlus < MoreUtils
         make_test: MakeTestCommand,
         uv: UpdateVersionCommand,
         update_version: UpdateVersionCommand,
+        ad: ApiDocsCommand,
+        api_docs: ApiDocsCommand,
       }
     end
 
@@ -63,6 +67,8 @@ class RailsPlusPlus < MoreUtils
         make_test: MakeTestHelpCommand,
         uv: UpdateVersionHelpCommand,
         update_version: UpdateVersionHelpCommand,
+        ad: ApiDocsHelpCommand,
+        api_docs: ApiDocsHelpCommand,
       }
     end
 
