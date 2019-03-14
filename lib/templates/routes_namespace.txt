@@ -1,10 +1,1 @@
   resources :documentation, only: :index
-  
-  namespace :api do
-    # Add API Routes here
-
-    # For API version 1
-    namespace :v1 do
-        
-    end
-  end

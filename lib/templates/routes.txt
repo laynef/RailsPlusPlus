@@ -1,0 +1,8 @@
+  namespace :api, except: [:new, :edit] do
+    # Add API Routes here
+
+    # For API version 1
+    namespace :v1 do
+        
+    end
+  end
