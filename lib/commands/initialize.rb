@@ -24,7 +24,7 @@ class InitializeCommand < MoreUtils
 
             # Update Routes
             unless lookup.has_key?(:"skip-routes")
-                routes_template = get_file_str("#{this_dir}/../templates/routes.txt")
+                routes_template = get_file_str("#{this_dir}/../templates/routes_namespace.txt")
                 routes_file = get_file_str("#{root}/config/routes.rb")
                 routes_arr = routes_file.split("\n")
                 last_end_line = last_end_index(routes_arr)

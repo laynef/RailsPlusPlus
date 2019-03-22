@@ -31,6 +31,8 @@ class ApiDocsCommand < MoreUtils
       # Add Routes
       routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
       routes_file = get_file_str("#{root}/config/routes.rb")
+      routes_arr = routes_file.split("\n")
+      last_end_line = routes_arr.length - 1
       new_routes = routes_arr.slice(0, last_end_line).join("\n") + "\n#{routes_template}\nend\n"
       write_file("#{root}/config/routes.rb", new_routes)
       

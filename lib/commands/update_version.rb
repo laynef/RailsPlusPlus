@@ -13,13 +13,6 @@ class UpdateVersionCommand < MoreUtils
             gc_template = get_file_str("#{this_dir}/../templates/response.txt")
             write_file("#{root}/app/controllers/concerns/response.rb", gc_template)
 
-            # dc_template = get_file_str("#{this_dir}/../templates/documentation_controller.txt")
-            # write_file("#{root}/app/controllers/documentation_controller.rb", dc_template)
-
-            # Add Service
-            # aps_template = get_file_str("#{this_dir}/../templates/api_documentation_service.txt")
-            # write_file("#{root}/app/services/api_documentation_service.rb", aps_template)
-
             puts "Updated your code base for Rails Plus Plus version: #{gem_version}"
         end
 

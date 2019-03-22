@@ -81,6 +81,8 @@ class RailsPlusPlus < MoreUtils
         '- model => Generate your CRUD model, controller, and migration',
         '- mt => Generate a unit test in minitest',
         '- make_test => Generate a unit test in minitest',
+        '- ad => Initialize your api documentation',
+        '- api_docs => Initialize your api documentation',
         '- uv => Update your version of Rails Plus Plus in your code base',
         '- update_version => Update your version of Rails Plus Plus in your code base',
       ]
