@@ -36,6 +36,13 @@ class InitializeCommand < MoreUtils
             puts "Your project has been initialized."
         end
 
+        def last_end_index arr
+            arr.each_with_index.inject(0) do |acc, (e, i)|
+                acc = i if /(end)/.match(e)
+                acc
+            end
+        end
+
     end
 
 end
