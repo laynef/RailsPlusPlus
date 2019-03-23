@@ -32,11 +32,18 @@ class ApiDocsCommand < MoreUtils
       routes_template = get_file_str("#{this_dir}/../templates/routes_documentation.txt")
       routes_file = get_file_str("#{root}/config/routes.rb")
       routes_arr = routes_file.split("\n")
-      last_end_line = routes_arr.length - 1
+      last_end_line = last_end_index(routes_arr)
       new_routes = routes_arr.slice(0, last_end_line).join("\n") + "\n#{routes_template}\nend\n"
       write_file("#{root}/config/routes.rb", new_routes)
       
       puts "Added Automatic API documentation to your project."
+    end
+
+    def last_end_index arr
+      arr.each_with_index.inject(0) do |acc, (e, i)|
+          acc = i if /(end)/.match(e)
+          acc
+      end
     end
 
   end
