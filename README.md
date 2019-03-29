@@ -5,7 +5,7 @@ and generate mini test unit tests.
 
 ## Requirements
 
-- Rails version >= 5
+- Rails version == 5
 - Ruby version >= 2.5
 
 ## Installation
