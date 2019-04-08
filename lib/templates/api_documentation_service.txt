@@ -8,7 +8,7 @@ class APIDocumentationService
     end
 
     def namespaces
-        # Blacklist namespaces
+        # Whitelist namespaces
         [:api]
     end
 
