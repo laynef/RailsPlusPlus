@@ -3,9 +3,11 @@
 Autogenerate your CRUD operations with Swagger like API documentation without extra configuration 
 and generate mini test unit tests.
 
+Automatic API Documentation is not supported in Rails version 6
+
 ## Requirements
 
-- Rails version == 5
+- Rails version >= 5
 - Ruby version >= 2.5
 
 ## Installation
