@@ -42,11 +42,11 @@ class DocumentationController < ApplicationController
       end
 
       def camelize_route route
-        APIDocumentationService.camelize_route(route)
+        ApiDocumentationService.camelize_route(route)
       end
 
       def get_api_routes
-        APIDocumentationService.get_api_routes
+        ApiDocumentationService.get_api_routes
       end
 
 end

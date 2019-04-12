@@ -1,4 +1,4 @@
-class APIDocumentationService
+class ApiDocumentationService
   class << self
     def generate_js_file
       all_routes = get_api_routes

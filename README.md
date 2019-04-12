@@ -34,7 +34,33 @@ railspp update_version
 
 Your command CLI command bin path is `railspp`
 
-![CLI DOCUMENTATION](./docs/CLI_COMMANDS.png)
+```plain-text
+______      _ __
+| ___ \    (_) |      _     _
+| |_/ /__ _ _| |___ _| |_ _| |_
+|    // _` | | / __|_   _|_   _|
+| |\ \ (_| | | \__ \ |_|   |_|
+\_| \_\__,_|_|_|___/
+
+Rails Plus Plus Version: 0.3.6
+
+Rails Plus Plus: Command Line Interface to make your life easier.
+=> The Rails Plus Plus command is 'railspp'. To blast this project into the fifth dimension.
+=> Use '--help' on any of the commands listed below for more details.
+
+List of commands:
+- i => Initialize your project
+- init => Initialize your project
+- initialize => Initialize your project
+- m => Generate your CRUD model, controller, and migration
+- model => Generate your CRUD model, controller, and migration
+- mt => Generate a unit test in minitest
+- make_test => Generate a unit test in minitest
+- ad => Initialize your api documentation
+- api_docs => Initialize your api documentation
+- uv => Update your version of Rails Plus Plus in your code base
+- update_version => Update your version of Rails Plus Plus in your code base
+```
 
 ## Getting Started
 
