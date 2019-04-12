@@ -1,4 +1,4 @@
 Rails.application.config.after_initialize do
-    Rails.application.reload_routes!
-    APIDocumentationService.generate_js_file()
+  Rails.application.reload_routes!
+  APIDocumentationService.generate_js_file()
 end

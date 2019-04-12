@@ -1,30 +1,46 @@
 module Response
   def render_json data, status
     data = JSON.parse(data) if data.is_a?(String)
-    data[:data] = data[:data].map {|e| object_delete(e) } if data && data[:data] && !data[:data].empty?
-    data = object_delete(data) if data && !data[:data]
+    data[:data] = data[:data].map {|e| deleting(e) } if data && data[:data] && !data[:data].empty?
+    data = deleting(data) if data && !data[:data]
     render json: data, status: status
   end
 
   private
 
-  def black_list
+  def hide_keys
     [
-      :password_digest
+      :password_digest,
     ]
   end
 
-  def object_delete(hash)
-    json = JSON.parse(hash.to_json).symbolize_keys
-    black_list.each do |e|
-      if json[e].is_a?(Hash)
-        json[e] = object_delete(json[e])
-      elsif json[e].is_a?(Array)
-        json[e] = json[e].map {|i| object_delete(i) }
-      elsif json[e]
-        json.delete(e)
+  def dictionary array
+    array.each_with_object({}) do |e, acc|
+      acc[e] = true
+      acc
+    end
+  end
+
+  def prepare_json collection
+    JSON.parse(collection.to_json).symbolize_keys
+  end
+
+  def object_delete(json, lookup)
+    json.each do |k, e|
+      if e.is_a?(Hash)
+        json[k] = object_delete(e, lookup)
+      elsif e.is_a?(Array)
+        json[k] = json[k].map {|i| object_delete(i, lookup) }
+      elsif lookup[k]
+        json.delete(k)
       end
     end
     json
+  end
+
+  def deleting(hash)
+    json = prepare_json(hash)
+    lookup = dictionary(hide_keys)
+    object_delete(json, lookup)
   end
 end

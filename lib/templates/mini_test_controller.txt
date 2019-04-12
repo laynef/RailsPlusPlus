@@ -12,33 +12,32 @@ class {{ NAMESPACE }}ControllerTest < ActionDispatch::IntegrationTest
   end
 
   def data_types val
-      lookup = {
-          string: Faker::Lorem.sentence.to_s,
-          datetime: DateTime.now,
-          integer: 1,
-          boolean: false,
-          text: Faker::Lorem.paragraph.to_s,
-      }
-      lookup[val] || nil
+    lookup = {
+      string: Faker::Lorem.sentence.to_s,
+      datetime: DateTime.now,
+      integer: 1,
+      boolean: false,
+      text: Faker::Lorem.paragraph.to_s,
+    }
+    lookup[val] || nil
   end
 
   def black_list_keys
-      {
-          id: true,
-          created_at: true,
-          updated_at: true,
-      }
+    {
+      id: true,
+      created_at: true,
+      updated_at: true,
+    }
   end
 
   def set_data_values
     get_columns.each_with_object({}) do |e, acc|
-        key = e[:key]
-        val = e[:data_type]
-        if black_list_keys[key]
-        else
-            acc[key] = data_types(val)
-        end
-        acc
+      key = e[:key]
+      val = e[:data_type]
+      if !black_list_keys[key]
+          acc[key] = data_types(val)
+      end
+      acc
     end
   end
 
