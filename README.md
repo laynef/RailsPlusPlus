@@ -42,7 +42,7 @@ ______      _ __
 | |\ \ (_| | | \__ \ |_|   |_|
 \_| \_\__,_|_|_|___/
 
-Rails Plus Plus Version: 0.3.6
+Rails Plus Plus Version: 0.3.8
 
 Rails Plus Plus: Command Line Interface to make your life easier.
 => The Rails Plus Plus command is 'railspp'. To blast this project into the fifth dimension.
@@ -58,8 +58,6 @@ List of commands:
 - make_test => Generate a unit test in minitest
 - ad => Initialize your api documentation
 - api_docs => Initialize your api documentation
-- uv => Update your version of Rails Plus Plus in your code base
-- update_version => Update your version of Rails Plus Plus in your code base
 ```
 
 ## Getting Started
