@@ -1,6 +1,6 @@
 # Rails++
 
-Autogenerate your CRUD operations with Swagger like API documentation without extra configuration 
+Auto-generate your CRUD operations with Swagger like API documentation without extra configuration 
 and generate mini test unit tests.
 
 Automatic API Documentation is not supported in Rails version 6
