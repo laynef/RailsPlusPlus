@@ -20,6 +20,22 @@ end
 class MoreUtils
     class << self
 
+        def versions lookup
+            version = nil
+            begin
+              version = lookup[:version].to_i
+            rescue
+              version = 0
+            end
+            
+            return version < 5 ? wrong_version_error : version
+        end
+
+        def wrong_version_error
+            puts 'Must provide a version option'
+            return false
+        end
+
         def gem_version
             "0.3.8"
         end

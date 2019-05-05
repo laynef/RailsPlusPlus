@@ -6,16 +6,10 @@ class ApiDocsCommand < MoreUtils
 
     def run(*args)
       lookup = flag_lookup(args)
-      version = nil
 
-      begin
-        version = lookup[:version].to_i
-      rescue
-        version = 0
-      end
-
-      return wrong_version_error if version > 4
-
+      version = versions(lookup)
+      return version if !version
+      
       # Add Initializers
       doc_str = version == 6 ? '/../javascripts/documentation.js' : version == 5 ? '/../assets/javascripts/documentation.js' : ''
       adi_template = get_file_str("#{this_dir}/../templates/api_documentation_initializer.txt")
