@@ -10,10 +10,11 @@ class ApiDocsCommand < MoreUtils
       version = versions(lookup)
       return version if !version
       
+      regex = '{{ DOC_PATH }}'
+
       # Add Initializers
-      doc_str = version == 6 ? '/../javascripts/documentation.js' : version == 5 ? '/../assets/javascripts/documentation.js' : ''
+      doc_str = version.to_i == 6 ? '/../javascripts/documentation.js' : version.to_i == 5 ? '/../assets/javascripts/documentation.js' : ''
       adi_template = get_file_str("#{this_dir}/../templates/api_documentation_initializer.txt")
-      adi_template = adi_template.gsub('{{ DOC_PATH }}', doc_str)
       write_file("#{root}/config/initializers/api_documentation_js.rb", adi_template)
 
       # Add Controllers
@@ -23,6 +24,7 @@ class ApiDocsCommand < MoreUtils
       # Add Service
       system("mkdir -p #{root}/app/services")
       aps_template = get_file_str("#{this_dir}/../templates/api_documentation_service.txt")
+      aps_template = aps_template.gsub(regex, doc_str)
       write_file("#{root}/app/services/api_documentation_service.rb", aps_template)
 
       # Add Views
