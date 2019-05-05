@@ -10,6 +10,6 @@
 
   <body style="width: 100%; overflow-x: hidden;">
     <%= yield %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= {{ DOC_NAME }}, 'data-turbolinks-track': 'reload' %>
   </body>
 </html>

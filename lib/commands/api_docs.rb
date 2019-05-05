@@ -11,9 +11,12 @@ class ApiDocsCommand < MoreUtils
       return version if !version
       
       regex = '{{ DOC_PATH }}'
+      doc_regex = '{{ DOC_NAME }}'
+
+      doc_name = version == 6 ? "javascript_pack_tag 'documentation'" : "javascript_include_tag 'application'"
 
       # Add Initializers
-      doc_str = version.to_i == 6 ? '/../javascripts/documentation.js' : version.to_i == 5 ? '/../assets/javascripts/documentation.js' : ''
+      doc_str = version.to_i == 6 ? '/../javascript/packs/documentation.js' : version.to_i == 5 ? '/../assets/javascripts/documentation.js' : ''
       adi_template = get_file_str("#{this_dir}/../templates/api_documentation_initializer.txt")
       write_file("#{root}/config/initializers/api_documentation_js.rb", adi_template)
 
@@ -33,6 +36,7 @@ class ApiDocsCommand < MoreUtils
       write_file("#{root}/app/views/documentation/index.html.erb", dihtml_template)
 
       dlhtml_template = get_file_str("#{this_dir}/../templates/documentation.layout.erb.txt")
+      dlhtml_template = dlhtml_template.gsub(doc_regex, doc_name)
       write_file("#{root}/app/views/layouts/documentation.html.erb", dlhtml_template)
 
       # Add Routes
