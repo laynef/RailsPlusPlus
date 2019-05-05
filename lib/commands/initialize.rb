@@ -6,10 +6,21 @@ class InitializeCommand < MoreUtils
 
         def run *args
             lookup = flag_lookup(args)
+            version = nil
 
-            # Add Initializers
-            cors_template = get_file_str("#{this_dir}/../templates/rack_cors_initializer.txt")
-            write_file("#{root}/config/initializers/cors.rb", cors_template)
+            begin
+              version = lookup[:version].to_i
+            rescue
+              version = 0
+            end
+      
+            return wrong_version_error if version > 4
+
+            if version == 5
+                # Add Initializers
+                cors_template = get_file_str("#{this_dir}/../templates/rack_cors_initializer.txt")
+                write_file("#{root}/config/initializers/cors.rb", cors_template)
+            end
 
             # Add Controllers
             gc_template = get_file_str("#{this_dir}/../templates/global_controller.txt")
@@ -35,6 +46,11 @@ class InitializeCommand < MoreUtils
 
             puts "Your project has been initialized."
         end
+
+        def wrong_version_error
+            puts 'Must provide a version option'
+            return nil
+          end
 
         def last_end_index arr
             arr.each_with_index.inject(0) do |acc, (e, i)|

@@ -6,9 +6,20 @@ class ApiDocsCommand < MoreUtils
 
     def run(*args)
       lookup = flag_lookup(args)
+      version = nil
+
+      begin
+        version = lookup[:version].to_i
+      rescue
+        version = 0
+      end
+
+      return wrong_version_error if version > 4
 
       # Add Initializers
+      doc_str = version == 6 ? '/../javascripts/documentation.js' : version == 5 ? '/../assets/javascripts/documentation.js' : ''
       adi_template = get_file_str("#{this_dir}/../templates/api_documentation_initializer.txt")
+      adi_template = adi_template.gsub('{{ DOC_PATH }}', doc_str)
       write_file("#{root}/config/initializers/api_documentation_js.rb", adi_template)
 
       # Add Controllers
@@ -44,6 +55,11 @@ class ApiDocsCommand < MoreUtils
         acc = i if /(namespace)/.match(e) && acc == 0
         acc
       end
+    end
+
+    def wrong_version_error
+      puts 'Must provide a version option'
+      return nil
     end
 
   end

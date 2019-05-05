@@ -34,7 +34,7 @@ class ApiDocumentationService
     private
     
       def output_path
-        __dir__ + '/../../app/assets/javascripts/documentation.js'
+        __dir__ + '{{ DOC_PATH }}'
       end
 
       def get_all_routes
