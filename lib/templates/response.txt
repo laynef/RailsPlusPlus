@@ -26,11 +26,11 @@ module Response
   end
 
   def object_delete(json, lookup)
-    json.each do |k, e|
-      if e.is_a?(Hash)
-        json[k] = object_delete(e, lookup)
-      elsif e.is_a?(Array)
-        json[k] = json[k].map {|i| object_delete(i, lookup) }
+    json.each do |k, v|
+      if v.is_a?(Hash)
+        json[k] = object_delete(prepare_json(v), lookup)
+      elsif v.is_a?(Array) && v.all? { |f| f.is_a?(Hash) }
+        json[k] = json[k].map {|val| object_delete(prepare_json(val), lookup) }
       elsif lookup[k]
         json.delete(k)
       end

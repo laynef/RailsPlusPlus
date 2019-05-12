@@ -37,7 +37,7 @@ class MoreUtils
         end
 
         def gem_version
-            "0.4.1"
+            "0.4.2"
         end
 
         def get_file_str path
