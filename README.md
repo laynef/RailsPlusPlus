@@ -1,5 +1,7 @@
 # Rails++
 
+![alt logo](./docs/LOGO.png)
+
 Auto-generate your CRUD operations with Swagger like API documentation without extra configuration 
 and generate mini test unit tests.
 
